@@ -45,15 +45,10 @@ def calcularLU(A):
         for i in range(j+1, Acpy.shape[1]):
             if Acpy[i,j] != 0:
                 coeficiente = Acpy[i,j] / Acpy[j,j]
-                print('coef: \n',coeficiente)
-                print('antes de *:\n',Acpy)
                 Acpy[j,:] = coeficiente * Acpy[j,:]
-                print('después de *:\n',Acpy)
-                print('-----------------')
         ## resto fila i - fila pivot y hago un cero debajo de pivot, sigo con la prox. fila debajo
                 Acpy[i,:] = Acpy[i,:] - Acpy[j,:]
         ##calcularLUsinPermutaciones(PA,L,U)
-    print(P)
     return L, U, P
 
 
@@ -65,8 +60,6 @@ def inversaLU(L, U, P=None):
     return Inv
 
 def main():
-    print('Ejecutar el programa')
-    # generar el tipo de transformacion dando valores a la matriz T
     T = pd.read_csv('T.csv', header=None).values
     calcularLU(T)
 
