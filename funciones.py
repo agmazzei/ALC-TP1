@@ -16,12 +16,10 @@ def pivotPos(col,inicioBusqueda):
 #pre: matriz cuadrada no nula
 #pos: Devuelve copia de A con fila inicio  y destino permutadas
 def permutarFil(A,inicio,destino):
+    aux = np.copy(A[inicio])
+    A[inicio] = A[destino]
+    A[destino] = aux
 
-    Acpy = np.copy(A)
-    aux = np.copy(Acpy[inicio])
-    Acpy[inicio] = Acpy[destino]
-    Acpy[destino] = aux
-    return Acpy
 
 def calcularLU(A):
     Acpy = np.copy(A)
@@ -37,8 +35,8 @@ def calcularLU(A):
         if Acpy[pivot,j] == 0: return
         ## permutar si pivot no esta en la posicion adecuada
         if pivot != j :
-            Acpy = permutarFil(Acpy,j,pivot)
-            P = np.matmul(permutarFil(P,j,pivot),P)
+            permutarFil(Acpy,j,pivot)
+            permutarFil(P,j,pivot)
             ## Agregar la permutacion a la matriz de permutaciones P
 
         ## despejar debajo de col de pivot
@@ -49,7 +47,7 @@ def calcularLU(A):
         ## resto fila i - fila pivot y hago un cero debajo de pivot, sigo con la prox. fila debajo
                 Acpy[i,:] = Acpy[i,:] - Acpy[j,:]
         ##calcularLUsinPermutaciones(PA,L,U)
-    return L, U, P
+    return L, Acpy, P
 
 
 def inversaLU(L, U, P=None):
@@ -61,7 +59,10 @@ def inversaLU(L, U, P=None):
 
 def main():
     T = pd.read_csv('T.csv', header=None).values
-    calcularLU(T)
+    res = (calcularLU(T))
+    print('L: /n', res[0])
+    print('U: /n', res[1])
+    print('P: /n', res[2])
 
 if __name__ == "__main__":
     main()
