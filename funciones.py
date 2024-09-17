@@ -2,6 +2,11 @@ import numpy as np
 import pandas as pd
 
 
+def restarFil(A,inicio,destino):
+    aux = np.copy(A[inicio])
+    A[inicio] = A[destino]
+    A[destino] = aux
+    
 ## pre: array no vacío de números decimales
 ## pos: devuelve la posicion a partir de 'inicioBusqueda' en la que se encuentra el maximo elemento en valor abs. de la columna
 def pivotPos(col,inicioBusqueda):
@@ -13,11 +18,11 @@ def pivotPos(col,inicioBusqueda):
             pos = i
     return pos
 #pre: matriz cuadrada no nula
-#pos: Devuelve copia de A con fila inicio  y destino permutadas
-def permutarFil(A,inicio,destino):
-    aux = np.copy(A[inicio])
-    A[inicio] = A[destino]
-    A[destino] = aux
+#pos: Devuelve copia de A con fila i  y j permutadas
+def permutarFil(A,i,j):
+    aux = np.copy(A[i])
+    A[i] = A[j]
+    A[j] = aux
 
 ## pre: Matriz A no nula de numeros reales
 ## pos: Devuelve matriz  triangulada junto con la Matriz de permutaciones que se requirieron en la triangulación. Si la matriz NO es cuadrada o no un pivot resulta 0 retorna None.
