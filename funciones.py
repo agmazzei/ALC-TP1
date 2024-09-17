@@ -1,17 +1,12 @@
 import numpy as np
 import pandas as pd
 
-
-def restarFil(A,inicio,destino):
-    aux = np.copy(A[inicio])
-    A[inicio] = A[destino]
-    A[destino] = aux
     
 ## pre: array no vacío de números decimales
 ## pos: devuelve la posicion a partir de 'inicioBusqueda' en la que se encuentra el maximo elemento en valor abs. de la columna
-def pivotPos(col,inicioBusqueda):
-    max=0
-    pos=0
+def maxCol(col,inicioBusqueda):
+    max,pos=0,0
+
     for i in range(inicioBusqueda, col.size):
         if np.abs(col[i]) > max:
             max = np.abs(col[i])
@@ -35,20 +30,20 @@ def calcularLU(A):
     for j in range(0, U.shape[1]):
         ## pivoteo
         colj = U[:,j]
-        pivot = pivotPos(colj,j)
+        posMax = maxCol(colj,j)
         ## pivot es 0 y ninguna permutación puede arreglar eso
-        if U[j,j] == 0 and j == U.shape[0]-1: return None
+        if U[j,posMax] == 0: return None
         ## permutar si pivot no esta en la posicion adecuada
-        if pivot != j :
-            permutarFil(U,j,pivot)
+        if posMax != j :
+            permutarFil(U,j,posMax)
             ## Agregar la permutacion a la matriz de permutaciones P
-            permutarFil(P,j,pivot)
+            permutarFil(P,j,posMax)
 
         ## despejar debajo de col de pivot
-        for i in range(j+1, U.shape[1]):
+        filas = U.shape[0]
+        for i in range(j+1, filas):
             if U[i,j] != 0:
-                coeficiente = U[i,j] / U[j,j]
-                U[j,:] = coeficiente * U[j,:]
+                U[j,:] = (U[i,j] / U[j,j]) * U[j,:]
         ## resto fila i - fila pivot y hago un cero debajo de pivot, sigo con la prox. fila debajo
                 U[i,:] = U[i,:] - U[j,:]
         ##encontrarL
@@ -65,6 +60,7 @@ def inversaLU(L, U, P=None):
 def main():
     T = pd.read_csv('T.csv', header=None).values
     print(calcularLU(T))
+
 
 if __name__ == "__main__":
     main()
