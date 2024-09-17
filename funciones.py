@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 
 
-
 ## pre: array no vacío de números decimales
 ## pos: devuelve la posicion a partir de 'inicioBusqueda' en la que se encuentra el maximo elemento en valor abs. de la columna
 def pivotPos(col,inicioBusqueda):
@@ -20,34 +19,35 @@ def permutarFil(A,inicio,destino):
     A[inicio] = A[destino]
     A[destino] = aux
 
+## pre: Matriz A no nula de numeros reales
+## pos: Devuelve matriz  triangulada junto con la Matriz de permutaciones que se requirieron en la triangulación. Si la matriz NO es cuadrada o no un pivot resulta 0 retorna None.
 
 def calcularLU(A):
-    Acpy = np.copy(A)
-    L, U = [],[]
+    if(A.shape[0] != A.shape[1]): return None
+    U = np.copy(A)
+    L = []
     P = [[1,0,0],[0,1,0],[0,0,1]]
-    I = P
-    for j in range(0, Acpy.shape[1]):
-        
-        ## encontrar pivot
-        colj = Acpy[:,j]
+    for j in range(0, U.shape[1]):
+        ## pivoteo
+        colj = U[:,j]
         pivot = pivotPos(colj,j)
-        ## pivot es 0 no se puede hacer LU
-        if Acpy[pivot,j] == 0: return
+        ## pivot es 0 y ninguna permutación puede arreglar eso
+        if U[j,j] == 0 and j == U.shape[0]-1: return None
         ## permutar si pivot no esta en la posicion adecuada
         if pivot != j :
-            permutarFil(Acpy,j,pivot)
-            permutarFil(P,j,pivot)
+            permutarFil(U,j,pivot)
             ## Agregar la permutacion a la matriz de permutaciones P
+            permutarFil(P,j,pivot)
 
         ## despejar debajo de col de pivot
-        for i in range(j+1, Acpy.shape[1]):
-            if Acpy[i,j] != 0:
-                coeficiente = Acpy[i,j] / Acpy[j,j]
-                Acpy[j,:] = coeficiente * Acpy[j,:]
+        for i in range(j+1, U.shape[1]):
+            if U[i,j] != 0:
+                coeficiente = U[i,j] / U[j,j]
+                U[j,:] = coeficiente * U[j,:]
         ## resto fila i - fila pivot y hago un cero debajo de pivot, sigo con la prox. fila debajo
-                Acpy[i,:] = Acpy[i,:] - Acpy[j,:]
-        ##calcularLUsinPermutaciones(PA,L,U)
-    return L, Acpy, P
+                U[i,:] = U[i,:] - U[j,:]
+        ##encontrarL
+    return L, U, P
 
 
 def inversaLU(L, U, P=None):
@@ -59,10 +59,7 @@ def inversaLU(L, U, P=None):
 
 def main():
     T = pd.read_csv('T.csv', header=None).values
-    res = (calcularLU(T))
-    print('L: /n', res[0])
-    print('U: /n', res[1])
-    print('P: /n', res[2])
+    print(calcularLU(T))
 
 if __name__ == "__main__":
     main()
