@@ -1,7 +1,8 @@
 import numpy as np
 import pandas as pd
 
-    
+
+
 ## pre: array no vacío de números decimales
 ## pos: devuelve la posicion a partir de 'inicioBusqueda' en la que se encuentra el maximo elemento en valor abs. de la columna
 def maxCol(col,inicioBusqueda):
@@ -12,7 +13,7 @@ def maxCol(col,inicioBusqueda):
             max = np.abs(col[i])
             pos = i
     return pos
-#pre: matriz cuadrada no nula
+#pre: matriz no nula
 #pos: Devuelve copia de A con fila i  y j permutadas
 def permutarFil(A,i,j):
     aux = np.copy(A[i])
@@ -25,8 +26,8 @@ def permutarFil(A,i,j):
 def calcularLU(A):
     if(A.shape[0] != A.shape[1]): return None
     U = np.copy(A)
-    L = []
-    P = [[1,0,0],[0,1,0],[0,0,1]]
+    L = np.array([[1,0,0],[0,1,0],[0,0,1]])
+    P = np.array([[1,0,0],[0,1,0],[0,0,1]])
     for j in range(0, U.shape[1]):
         ## pivoteo
         colj = U[:,j]
@@ -46,7 +47,26 @@ def calcularLU(A):
                 U[j,:] = (U[i,j] / U[j,j]) * U[j,:]
         ## resto fila i - fila pivot y hago un cero debajo de pivot, sigo con la prox. fila debajo
                 U[i,:] = U[i,:] - U[j,:]
-        ##encontrarL
+                
+                
+        
+##encontrarL
+    ##calculo PA
+    columnasU = U.shape[1]
+    filasL = U.shape[1]
+    PA = np.matmul(P,A)
+    
+        ## calculo L elemento a elemento de L
+    for k in range(0, columnasU):
+        for m in range(0, filasL):
+            print('U[K,K]:',U[k,k], 'con k=:',k)
+            filL = np.copy(L[m,:])
+            colU = np.copy(U[:,k])
+            filL[k] = 0
+            L[m,k] = (PA[m,k] - (filL @ colU)) / U[k,k]
+        
+        
+        
     return L, U, P
 
 
@@ -59,7 +79,7 @@ def inversaLU(L, U, P=None):
 
 def main():
     T = pd.read_csv('T.csv', header=None).values
-    print(calcularLU(T))
+    L,U,P = calcularLU(T)
 
 
 if __name__ == "__main__":
