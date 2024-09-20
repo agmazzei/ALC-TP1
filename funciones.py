@@ -2,12 +2,11 @@ import numpy as np
 import pandas as pd
 
 
-
 ## pre: array no vacío de números decimales
 ## pos: devuelve la posicion a partir de 'inicioBusqueda' en la que se encuentra el maximo elemento en valor abs. de la columna
 def maxCol(col,inicioBusqueda):
     max,pos=0,0
-
+    
     for i in range(inicioBusqueda, col.size):
         if np.abs(col[i]) > max:
             max = np.abs(col[i])
@@ -26,8 +25,8 @@ def permutarFil(A,i,j):
 def calcularLU(A):
     if(A.shape[0] != A.shape[1]): return None
     U = np.copy(A)
-    L = np.array([[1,0,0],[0,1,0],[0,0,1]])
-    P = np.array([[1,0,0],[0,1,0],[0,0,1]])
+    L = np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
+    P = np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
     for j in range(0, U.shape[1]):
         ## pivoteo
         colj = U[:,j]
@@ -44,10 +43,9 @@ def calcularLU(A):
         filas = U.shape[0]
         for i in range(j+1, filas):
             if U[i,j] != 0:
-                U[j,:] = (U[i,j] / U[j,j]) * U[j,:]
+                filParaTriangular = (U[i,j] / U[j,j]) * U[j,:]
         ## resto fila i - fila pivot y hago un cero debajo de pivot, sigo con la prox. fila debajo
-                U[i,:] = U[i,:] - U[j,:]
-                
+                U[i,:] = U[i,:] - filParaTriangular
                 
         
 ##encontrarL
@@ -59,27 +57,21 @@ def calcularLU(A):
         ## calculo L elemento a elemento de L
     for k in range(0, columnasU):
         for m in range(0, filasL):
-            print('U[K,K]:',U[k,k], 'con k=:',k)
             filL = np.copy(L[m,:])
             colU = np.copy(U[:,k])
-            filL[k] = 0
+            filL[k] = 0.0
             L[m,k] = (PA[m,k] - (filL @ colU)) / U[k,k]
-        
-        
         
     return L, U, P
 
 
 def inversaLU(L, U, P=None):
     Inv = []
-    # su código
-    
-    ###########
+
     return Inv
 
 def main():
     T = pd.read_csv('T.csv', header=None).values
-    L,U,P = calcularLU(T)
 
 
 if __name__ == "__main__":
