@@ -60,7 +60,8 @@ def calcularLU(A):
             filL = np.copy(L[m,:])
             colU = np.copy(U[:,k])
             filL[k] = 0.0
-            L[m,k] = (PA[m,k] - (filL @ colU)) / U[k,k]
+            if(m > k):
+                L[m,k] = (PA[m,k] - (filL @ colU)) / U[k,k]
         
     return L, U, P
 
