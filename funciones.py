@@ -20,12 +20,13 @@ def permutarFil(A,i,j):
     A[j] = aux
 
 ## pre: Matriz A no nula de numeros reales
-## pos: Devuelve matriz  triangulada junto con la Matriz de permutaciones que se requirieron en la triangulación. Si la matriz NO es cuadrada o no un pivot resulta 0 retorna None.
+## pos: Devuelve matriz  triangulada junto con la Matriz de permutaciones que se requirieron en la triangulación. Si la matriz NO es cuadrada o un pivot resulta 0 retorna None.
 def calcularLU(A):
     if(A.shape[0] != A.shape[1]): return None
+    dimensionA = A.shape[0]
     U = np.copy(A)
-    L = np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
-    P = np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
+    L = np.eye(dimensionA)
+    P = np.eye(dimensionA)
     for j in range(0, U.shape[1]):
         ## pivoteo
         colj = U[:,j]
@@ -85,8 +86,8 @@ def inversaTriangular(L):
 #pos: Devuelve inversa de la matriz triangular inferior sin modificar la original
 def inversaTriangularInferior(L):
     Lcpy = np.copy(L)
-    Linv = np.array([[1.0,0.0,0.0],[0.0,1.0,0.0],[0.0,0.0,1.0]])
     cantFilasL = Lcpy.shape[0]
+    Linv = np.eye(cantFilasL)
     for i in range(0,cantFilasL):
         Linv[i,:] *= 1 / Lcpy[i,i]
         for posEnColi in range(i+1,cantFilasL):
@@ -99,7 +100,8 @@ def inversaTriangularInferior(L):
 def inversaLU(L, U, P=None):
     Linv = inversaTriangular(L)
     Uinv = inversaTriangular(U)
-    return np.matmul(Uinv,Linv)
+    preinv = np.matmul(Uinv,Linv)
+    return np.matmul(preinv,P)
 
 def main():
     T = pd.read_csv('T.csv', header=None).values
